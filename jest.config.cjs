@@ -13,6 +13,7 @@ module.exports = {
     "src/hooks/**/*.{ts,tsx}",
     "src/theme/**/*.{ts,tsx}",
     "src/utils/**/*.{ts,tsx}",
+    "src/icons/**/*.{ts,tsx}",
     "!src/**/*.stories.tsx",
     "!src/**/index.ts",
   ],

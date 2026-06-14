@@ -11,6 +11,9 @@ export * from "./hooks/useTheme";
 export * from "./hooks/useFocusTrap";
 export * from "./hooks/useClickOutside";
 
+// Icons
+export * from "./icons";
+
 // Tokens
 export * from "./tokens";
 
