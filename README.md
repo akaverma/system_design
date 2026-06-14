@@ -1,6 +1,6 @@
 # @storybook-jest/ui
 
-[![CI](https://github.com/akaverma/system_design/actions/workflows/ci.yml/badge.svg)](https://github.com/akaverma/system_design/actions/workflows/ci.yml)
+[![CI](https://github.com/akaverma/system_design/actions/workflows/deploy-storybook.yml/badge.svg)](https://github.com/akaverma/system_design/actions/workflows/deploy-storybook.yml)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?logo=tailwind-css&logoColor=white)

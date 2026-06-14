@@ -13,10 +13,12 @@ fails, no credential helper configured).
 - Jest + React Testing Library (`ts-jest`), 90% coverage threshold enforced
 - tsup for bundling (dual ESM `dist/index.js` + CJS `dist/index.cjs` + `.d.ts` + `dist/styles.css`)
 - ESLint (typescript-eslint, jsx-a11y, react-hooks, storybook) + Prettier (tailwind plugin)
-- GitHub Actions: `ci.yml` (lint/typecheck/test/build/storybook-build on PR + push to main),
-  `publish.yml` (npm publish on GitHub release, needs `NPM_TOKEN` secret),
-  `deploy-storybook.yml` (deploys Storybook to GitHub Pages on push to main, base path
-  `/system_design/` via `STORYBOOK_BASE_PATH` env var read in `.storybook/main.ts`)
+- GitHub Actions: single workflow `deploy-storybook.yml` — `build` job runs
+  lint/typecheck/test/build/storybook-build on PRs and pushes to `main`; `deploy` job (push to
+  `main` only) deploys Storybook to GitHub Pages, base path `/system_design/` via
+  `STORYBOOK_BASE_PATH` env var read in `.storybook/main.ts`. `ci.yml` and `publish.yml` were
+  removed (publish.yml needed an `NPM_TOKEN` secret that was never set up and never ran since it
+  only triggered on GitHub releases).
 - Storybook is live at `https://akaverma.github.io/system_design/` (Pages source = GitHub Actions)
 
 ## What exists so far
