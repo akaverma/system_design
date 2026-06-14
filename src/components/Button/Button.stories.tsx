@@ -20,6 +20,9 @@ const meta: Meta<typeof Button> = {
     },
     isLoading: { control: "boolean" },
     disabled: { control: "boolean" },
+    iconLeft: { control: false },
+    iconRight: { control: false },
+    className: { control: false },
   },
 };
 

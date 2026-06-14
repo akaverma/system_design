@@ -7,6 +7,10 @@ const meta: Meta<typeof Input> = {
   tags: ["autodocs"],
   argTypes: {
     disabled: { control: "boolean" },
+    prefix: { control: false },
+    suffix: { control: false },
+    className: { control: false },
+    containerClassName: { control: false },
   },
 };
 
