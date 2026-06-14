@@ -55,9 +55,14 @@ fails, no credential helper configured).
 ### Components (all 21 done)
 Each component folder has `Component.tsx`, `Component.stories.tsx`, `Component.test.tsx`, `index.ts`.
 All use `forwardRef` (except `Modal`/`Drawer`/`Tooltip`, which have no single host element to
-forward to before/around their portal/clone), accept `className` (merged via `cn()`), have JSDoc on
-every prop, and are exported from `src/index.ts`. Global coverage is 98.6% stmts / 95.76% branches
-(threshold 80%/90%), 476 tests across 26 suites.
+forward to before/around their portal/clone), accept `className` (merged via `cn()`), and are
+exported from `src/index.ts`. JSDoc is kept to short one-liners only where a prop's behavior isn't
+obvious from its name/type. Global coverage is 98.6% stmts / 95.76% branches (threshold 80%/90%),
+476 tests across 26 suites.
+
+Components that generate an element id for label/aria association (Input, Textarea, Checkbox,
+Radio, Select, Modal, Drawer, Tooltip) use `React.useId()` rather than a hand-rolled
+counter/`useUniqueId` helper.
 
 - **Button** (`src/components/Button/`) — variants `primary | secondary | ghost | danger | link`,
   sizes `sm | md | lg`, `isLoading` (spinner + `aria-busy`), `iconLeft`/`iconRight`, defaults to
