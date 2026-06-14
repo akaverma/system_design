@@ -50,22 +50,89 @@ fails, no credential helper configured).
 - Story: `Foundations/Icons` (AllIcons grid, Sizes, Colors)
 - 100% test coverage in `icons.test.tsx`
 
-### Components (done — pattern to replicate for future components)
+### Components (all 21 done)
 Each component folder has `Component.tsx`, `Component.stories.tsx`, `Component.test.tsx`, `index.ts`.
-All use `forwardRef`, accept `className` (merged via `cn()`), have JSDoc on every prop, and are
-exported from `src/index.ts`.
+All use `forwardRef` (except `Modal`/`Drawer`/`Tooltip`, which have no single host element to
+forward to before/around their portal/clone), accept `className` (merged via `cn()`), have JSDoc on
+every prop, and are exported from `src/index.ts`. Global coverage is 98.6% stmts / 95.76% branches
+(threshold 80%/90%), 476 tests across 26 suites.
 
 - **Button** (`src/components/Button/`) — variants `primary | secondary | ghost | danger | link`,
   sizes `sm | md | lg`, `isLoading` (spinner + `aria-busy`), `iconLeft`/`iconRight`, defaults to
-  `type="button"`. Story has per-variant/size/state stories + `iconLeft`/`iconRight`/`className`
-  controls disabled (object-control bug, see "Gotchas" below).
+  `type="button"`.
 - **Input** (`src/components/Input/`) — `label` (auto-generated unique `id`), `error` (role="alert",
   `aria-invalid`, `aria-describedby`), `helperText`, `prefix`/`suffix` adornments. `InputProps` omits
-  `"size" | "prefix" | "suffix"` from `InputHTMLAttributes` (native attrs collide with these prop names).
+  `"size" | "prefix" | "suffix"` from `InputHTMLAttributes`.
+- **Badge** (`src/components/Badge/`) — variants `default | primary | secondary | success | warning |
+  danger | info | outline`, sizes `sm | md | lg`.
+- **Spinner** (`src/components/Spinner/`) — wraps `SpinnerIcon`, sizes `sm | md | lg | xl`,
+  `role="status"` + `sr-only` `label` (default "Loading").
+- **Skeleton** (`src/components/Skeleton/`) — variants `text | circular | rectangular`,
+  numeric/string `width`/`height`, `animate-pulse bg-muted`, `aria-hidden`.
+- **Avatar** (`src/components/Avatar/`) — `src`/`alt`/`name` with `onError` fallback to initials
+  (first letters of first/last word) then a generic person-silhouette icon; sizes `sm | md | lg | xl`,
+  shapes `circle | square`.
+- **Toggle** (`src/components/Toggle/`) — `<button role="switch" aria-checked>` (not a checkbox
+  input), controlled (`checked`/`onCheckedChange`) or uncontrolled (`defaultChecked`), sizes
+  `sm | md | lg`.
+- **Checkbox** (`src/components/Checkbox/`) — visually-hidden `<input type="checkbox" className="peer
+  sr-only">` + styled `<span>` box using `peer-*` variants and `CheckIcon`; `indeterminate` set
+  imperatively via merged ref + `useEffect` (it's a DOM property, not an attribute); label/error/
+  helperText pattern like Input.
+- **Radio** (`src/components/Radio/`) — exports `Radio` + `RadioGroup`. `RadioGroup` is a
+  `React.createContext` provider supplying `name`/`value`/`onChange` to child `Radio`s (controlled
+  or uncontrolled via `defaultValue`); a bare `Radio` outside a group falls back to its own props.
+- **Textarea** (`src/components/Textarea/`) — Input-style label/error/helperText for `<textarea>`,
+  plus `resize: "none" | "vertical" | "horizontal" | "both"` (default `"vertical"`).
+- **Select** (`src/components/Select/`) — native `<select appearance-none>` + `ChevronDownIcon`
+  decoration, `options`/`SelectOption[]` or `children` `<option>`s, `placeholder` (disabled+hidden
+  empty option), Input-style label/error/helperText.
+- **Card** (`src/components/Card/`) — composable: `Card`, `CardHeader`, `CardTitle` (has an
+  eslint-disable for `jsx-a11y/heading-has-content` since content comes via spread `props`),
+  `CardDescription`, `CardContent`, `CardFooter`.
+- **Modal** (`src/components/Modal/`) — `isOpen`/`onClose`, portal to `document.body` via
+  `createPortal` (renders `null` when closed), `useFocusTrap`, ESC-to-close, overlay-click-to-close
+  (target-check, not `useClickOutside`), sizes `sm | md | lg | xl | full`. Overlay div has an
+  eslint-disable for `jsx-a11y/click-events-have-key-events`/`no-static-element-interactions`
+  (decorative; ESC + close button cover keyboard access).
+- **Drawer** (`src/components/Drawer/`) — same portal/focus-trap/ESC pattern as Modal but slides in
+  from `position: "left" | "right" | "top" | "bottom"`, `size: "sm" | "md" | "lg" | "full"` (width
+  for left/right, height for top/bottom). Deliberately duplicates Modal's overlay logic rather than
+  sharing, to keep each component self-contained.
+- **Tooltip** (`src/components/Tooltip/`) — wraps a single child via `React.cloneElement`, composes
+  existing hover/focus/blur handlers, `position: "top" | "bottom" | "left" | "right"`, `delay`
+  (default 200ms) via `setTimeout`, `role="tooltip"` + `aria-describedby`.
+- **Tabs** (`src/components/Tabs/`) — compound `Tabs`/`TabList`/`Tab`/`TabPanel` via context, WAI-ARIA
+  tabs pattern with full arrow-key/Home/End navigation + automatic activation (`.focus()` +
+  `.click()`). `TabList` div needs `tabIndex={-1}` for `jsx-a11y/interactive-supports-focus`.
+- **Accordion** (`src/components/Accordion/`) — compound `Accordion`/`AccordionItem`/
+  `AccordionTrigger`/`AccordionContent` via nested contexts, `type: "single" | "multiple"`,
+  `collapsible`, controlled/uncontrolled, `ChevronDownIcon` rotates via `isOpen`.
+- **Table** (`src/components/Table/`) — shadcn-style wrappers: `Table` (wraps `<table>` in an
+  `overflow-auto` div but forwards the ref to the `<table>` itself), `TableHeader`, `TableBody`,
+  `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`.
+- **Pagination** (`src/components/Pagination/`) — `<nav aria-label="Pagination">`, exports the pure
+  `getPageRange(currentPage, totalPages, siblingCount = 1)` helper (returns `(number | "ellipsis")[]`)
+  separately for unit testing, `aria-current="page"`, prev/next with `aria-label`s and
+  disabled-at-boundaries.
+- **Toast** (`src/components/Toast/`) — presentational `Toast` (`role="status"` `aria-live="polite"`,
+  variant icons from status icons) + `ToastProvider`/`useToast()` managing a queue, portal viewport
+  fixed top-right, auto-dismiss via `setTimeout` (duration `0` disables it, default 5000ms).
+- **Alert** (`src/components/Alert/`) — inline banner, `variant: "default" | "success" | "warning" |
+  "danger" | "info"`, `role="alert"` only for `"danger"` (else `"status"`), `AlertProps` omits
+  `"title"` from `HTMLAttributes` (collides with native `title` tooltip attribute), optional
+  `onDismiss` close button, status icons (no icon for `"default"`).
 
 ### Barrel export
-`src/index.ts` re-exports: components, theme (`ThemeProvider`, `themes`), hooks (`useTheme`,
-`useFocusTrap`, `useClickOutside`), icons, tokens, `cn`.
+`src/index.ts` re-exports all 21 components (alphabetical), theme (`ThemeProvider`, `themes`), hooks
+(`useTheme`, `useFocusTrap`, `useClickOutside`), icons, tokens, `cn`.
+
+### Visual regression (Chromatic)
+- `chromatic` devDependency installed, `npm run chromatic` script (`chromatic --exit-zero-on-changes`)
+- `.github/workflows/chromatic.yml` runs on PRs and pushes to `main`, using
+  `secrets.CHROMATIC_PROJECT_TOKEN` — **this secret has not been created yet**; an owner needs to
+  create a project at chromatic.com (link the GitHub repo) and add the resulting project token as a
+  repo secret named `CHROMATIC_PROJECT_TOKEN` for this workflow to actually run.
 
 ## Gotchas / lessons learned (don't redo these mistakes)
 
@@ -104,18 +171,9 @@ npm run lint
 npm run typecheck
 ```
 
-## Remaining work (from original spec, not yet started)
+## Remaining work
 
-The original ask was 20+ components. Only **Button** and **Input** are complete. Still to build,
-following the exact same pattern (component + stories + tests + index, exported from
-`src/index.ts`, `forwardRef`, `cn()`-merged `className`, ARIA, JSDoc props):
-
-Badge, Modal, Toast (these three were called out as "start with these 5" along with Button/Input),
-then Textarea, Select, Checkbox, Radio, Toggle, Drawer, Tooltip, Avatar, Card, Tabs, Accordion,
-Spinner (icon already exists, may just need a wrapper component with size/label), Skeleton, Table,
-Pagination, Alert.
-
-Modal/Drawer should use `useFocusTrap` + `useClickOutside` (already built). Toast/Alert should use
-the status icons in `src/icons` (`CheckCircleIcon`, `AlertTriangleIcon`, `AlertCircleIcon`, `InfoIcon`).
-
-Chromatic visual regression testing was requested but not yet set up.
+All 21 components from the original spec are built, tested, exported, lint-clean, and pass
+`build`/`build-storybook`. Remaining: someone with chromatic.com access needs to create the project
+and add `CHROMATIC_PROJECT_TOKEN` as a repo secret (see "Visual regression (Chromatic)" above) for
+the new `chromatic.yml` workflow to run.
