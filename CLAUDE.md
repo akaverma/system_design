@@ -128,11 +128,14 @@ every prop, and are exported from `src/index.ts`. Global coverage is 98.6% stmts
 (`useTheme`, `useFocusTrap`, `useClickOutside`), icons, tokens, `cn`.
 
 ### Visual regression (Chromatic)
-- `chromatic` devDependency installed, `npm run chromatic` script (`chromatic --exit-zero-on-changes`)
-- `.github/workflows/chromatic.yml` runs on PRs and pushes to `main`, using
-  `secrets.CHROMATIC_PROJECT_TOKEN` — **this secret has not been created yet**; an owner needs to
-  create a project at chromatic.com (link the GitHub repo) and add the resulting project token as a
-  repo secret named `CHROMATIC_PROJECT_TOKEN` for this workflow to actually run.
+- `chromatic` devDependency and `npm run chromatic` script (`chromatic --exit-zero-on-changes`) are
+  still present for local/manual use.
+- The `.github/workflows/chromatic.yml` CI workflow was removed — it required
+  `secrets.CHROMATIC_PROJECT_TOKEN`, which was never created, so the check failed on every PR/push.
+  If visual regression CI is wanted later: create a project at chromatic.com (link the GitHub repo),
+  add the resulting token as a repo secret named `CHROMATIC_PROJECT_TOKEN`, then re-add a workflow
+  that runs `chromatic-com/chromatic@v11` with `projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}`
+  on PRs and pushes to `main`.
 
 ## Gotchas / lessons learned (don't redo these mistakes)
 
@@ -174,6 +177,5 @@ npm run typecheck
 ## Remaining work
 
 All 21 components from the original spec are built, tested, exported, lint-clean, and pass
-`build`/`build-storybook`. Remaining: someone with chromatic.com access needs to create the project
-and add `CHROMATIC_PROJECT_TOKEN` as a repo secret (see "Visual regression (Chromatic)" above) for
-the new `chromatic.yml` workflow to run.
+`build`/`build-storybook`. Chromatic CI is not set up (see "Visual regression (Chromatic)" above) —
+optional follow-up if visual regression testing is wanted later.
