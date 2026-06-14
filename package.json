@@ -1,5 +1,5 @@
 {
-  "name": "@akarshit/ui",
+  "name": "@storybook-jest/ui",
   "version": "0.1.0",
   "description": "A production-grade, accessible React component library and design system built with TypeScript and Tailwind CSS.",
   "license": "MIT",

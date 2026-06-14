@@ -1,4 +1,4 @@
-# @akarshit/ui
+# @storybook-jest/ui
 
 [![CI](https://github.com/akaverma/system_design/actions/workflows/ci.yml/badge.svg)](https://github.com/akaverma/system_design/actions/workflows/ci.yml)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
@@ -15,18 +15,18 @@ into any design system via CSS variable theming.
 ## Why this exists
 
 Most component libraries either lock you into their design language or require a full
-rewrite to theme. `@akarshit/ui` is built around a small set of **CSS custom properties**
+rewrite to theme. `@storybook-jest/ui` is built around a small set of **CSS custom properties**
 (`--color-primary`, `--color-background`, `--radius`, etc.) so consumers can re-skin the
 entire library — including dark mode — without touching component code.
 
 ## Installation
 
 ```bash
-npm install @akarshit/ui
+npm install @storybook-jest/ui
 # or
-pnpm add @akarshit/ui
+pnpm add @storybook-jest/ui
 # or
-yarn add @akarshit/ui
+yarn add @storybook-jest/ui
 ```
 
 `react` and `react-dom` (>=18) are peer dependencies and must be installed in your app.
@@ -35,13 +35,13 @@ Import the stylesheet once in your app's entry point (it includes Tailwind's bas
 components, and utility layers plus the default light/dark token values):
 
 ```ts
-import "@akarshit/ui/styles.css";
+import "@storybook-jest/ui/styles.css";
 ```
 
 ## Quick start
 
 ```tsx
-import { Button, Input, ThemeProvider } from "@akarshit/ui";
+import { Button, Input, ThemeProvider } from "@storybook-jest/ui";
 
 export function App() {
   return (
@@ -67,7 +67,7 @@ Wrap your app in `<ThemeProvider>`. It applies the `dark` class to `<html>` and 
 the resolved theme's tokens as CSS variables on `document.documentElement`.
 
 ```tsx
-import { ThemeProvider, useTheme } from "@akarshit/ui";
+import { ThemeProvider, useTheme } from "@storybook-jest/ui";
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();

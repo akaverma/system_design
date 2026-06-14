@@ -1,7 +1,7 @@
-# @akarshit/ui — Project Context for Claude
+# @storybook-jest/ui — Project Context for Claude
 
 This is a from-scratch, production-grade **React + TypeScript design system / component
-library**, published as `@akarshit/ui`, intended as a Staff-level portfolio project.
+library**, published as `@storybook-jest/ui`, intended as a Staff-level portfolio project.
 GitHub repo: `git@github.com:akaverma/system_design.git` (pushed via SSH — HTTPS push
 fails, no credential helper configured).
 
