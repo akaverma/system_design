@@ -1,33 +1,17 @@
 import * as React from "react";
 import { cn } from "../../utils/cn";
 
-/** Side of the trigger element the tooltip is positioned on. */
 export type TooltipPosition = "top" | "bottom" | "left" | "right";
 
 export interface TooltipProps {
   /** Content shown inside the tooltip. */
   content: React.ReactNode;
-  /**
-   * A single React element that triggers the tooltip on hover/focus. Must
-   * accept a `ref` and forward `...props` (e.g. a `Button` or a native element).
-   */
+  /** A single element that triggers the tooltip on hover/focus; cloned to attach handlers. */
   children: React.ReactElement;
-  /**
-   * Side of the trigger the tooltip is positioned on.
-   * @default "top"
-   */
   position?: TooltipPosition;
-  /**
-   * Delay in milliseconds before the tooltip appears.
-   * @default 200
-   */
   delay?: number;
-  /**
-   * Disables the tooltip entirely (no listeners attached, never shown).
-   * @default false
-   */
+  /** Disables the tooltip entirely (no listeners attached, never shown). */
   disabled?: boolean;
-  /** Additional class names for the tooltip bubble. */
   className?: string;
 }
 
@@ -38,31 +22,7 @@ const positionStyles: Record<TooltipPosition, string> = {
   right: "left-full top-1/2 -translate-y-1/2 ml-2",
 };
 
-let idCounter = 0;
-/** Generates a stable, unique id for associating the tooltip bubble with its trigger. */
-function useUniqueId(prefix: string): string {
-  const generated = React.useRef<string>();
-  if (!generated.current) {
-    idCounter += 1;
-    generated.current = `${prefix}-${idCounter}`;
-  }
-  return generated.current;
-}
-
-/**
- * Wraps a single trigger element and shows a floating label on hover/focus.
- *
- * The trigger element is cloned via `React.cloneElement` so that hover/focus
- * handlers and `aria-describedby` can be attached to it without requiring an
- * extra wrapper element to receive focus.
- *
- * @example
- * ```tsx
- * <Tooltip content="Save changes">
- *   <Button>Save</Button>
- * </Tooltip>
- * ```
- */
+/** Wraps a single trigger element and shows a floating label on hover/focus. */
 export function Tooltip({
   content,
   children,
@@ -73,14 +33,10 @@ export function Tooltip({
 }: TooltipProps): React.ReactElement {
   const [visible, setVisible] = React.useState(false);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
-  const tooltipId = useUniqueId("tooltip");
+  const tooltipId = React.useId();
 
   React.useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
+    return () => clearTimeout(timeoutRef.current);
   }, []);
 
   if (disabled) {
@@ -88,15 +44,11 @@ export function Tooltip({
   }
 
   const show = () => {
-    timeoutRef.current = setTimeout(() => {
-      setVisible(true);
-    }, delay);
+    timeoutRef.current = setTimeout(() => setVisible(true), delay);
   };
 
   const hide = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+    clearTimeout(timeoutRef.current);
     setVisible(false);
   };
 

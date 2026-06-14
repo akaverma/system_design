@@ -3,30 +3,20 @@ import { cn } from "../../utils/cn";
 
 export interface RadioProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "size"> {
-  /** Visible label rendered next to the radio button and associated via `htmlFor`/`id`. */
   label?: string;
-  /** Additional class names applied to the outer wrapper. */
   containerClassName?: string;
-  /** Additional class names merged with the radio input's default styles. */
   className?: string;
 }
 
 export interface RadioGroupProps {
-  /** Name shared by all radio inputs in the group (overrides each Radio's own `name`). */
+  /** Shared by all radios in the group; overrides each Radio's own `name`. */
   name: string;
-  /** The currently selected value (controlled). */
   value?: string;
-  /** Default selected value (uncontrolled). */
   defaultValue?: string;
-  /** Called with the new value when the selection changes. */
   onChange?: (value: string) => void;
-  /** Accessible label for the group. */
   "aria-label"?: string;
-  /** Visible legend/label for the group, rendered above the options. */
   label?: string;
-  /** `Radio` elements (each needs its own `value` prop). */
   children: React.ReactNode;
-  /** Additional class names merged with the group's default styles. */
   className?: string;
 }
 
@@ -38,32 +28,9 @@ interface RadioGroupContextValue {
 
 const RadioGroupContext = React.createContext<RadioGroupContextValue | null>(null);
 
-let idCounter = 0;
-/** Generates a stable, unique id for associating labels with a radio across renders. */
-function useUniqueId(prefix: string, providedId?: string): string {
-  const generated = React.useRef<string>();
-  if (!generated.current) {
-    idCounter += 1;
-    generated.current = `${prefix}-${idCounter}`;
-  }
-  return providedId ?? generated.current;
-}
-
 /**
- * A styled radio button with a visible label.
- *
- * When rendered inside a `RadioGroup`, the `name`, `checked`, and `onChange`
- * behavior are derived from the group's context, so only `value` (and
- * optionally `label`) need to be provided. When used standalone, all props
- * behave like a regular native `<input type="radio">`.
- *
- * @example
- * ```tsx
- * <RadioGroup name="plan" label="Choose a plan" defaultValue="free">
- *   <Radio value="free" label="Free" />
- *   <Radio value="pro" label="Pro" />
- * </RadioGroup>
- * ```
+ * Standalone by default; when rendered inside a `RadioGroup`, `name`,
+ * `checked`, and `onChange` are derived from the group context.
  */
 export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(function Radio(
   {
@@ -80,17 +47,16 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(function Rad
   },
   ref,
 ) {
-  const radioId = useUniqueId("radio", id);
+  const generatedId = React.useId();
+  const radioId = id ?? generatedId;
   const group = React.useContext(RadioGroupContext);
 
   const resolvedName = group ? group.name : name;
   const resolvedChecked = group ? group.value === value : checked;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (group) {
-      if (typeof value === "string") {
-        group.onChange(value);
-      }
+    if (group && typeof value === "string") {
+      group.onChange(value);
     }
     onChange?.(event);
   };
@@ -139,18 +105,8 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(function Rad
 });
 
 /**
- * A context provider that groups `Radio` elements so only one can be
- * selected at a time, supporting both controlled (`value`/`onChange`) and
- * uncontrolled (`defaultValue`) usage.
- *
- * @example
- * ```tsx
- * <RadioGroup name="plan" label="Choose a plan" defaultValue="free" onChange={setPlan}>
- *   <Radio value="free" label="Free" />
- *   <Radio value="pro" label="Pro" />
- *   <Radio value="enterprise" label="Enterprise" />
- * </RadioGroup>
- * ```
+ * Groups `Radio` elements so only one can be selected at a time, supporting
+ * both controlled (`value`/`onChange`) and uncontrolled (`defaultValue`) usage.
  */
 export const RadioGroup = function RadioGroup({
   name,

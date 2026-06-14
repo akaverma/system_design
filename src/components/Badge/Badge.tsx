@@ -1,7 +1,6 @@
 import * as React from "react";
 import { cn } from "../../utils/cn";
 
-/** Visual style of the badge. */
 export type BadgeVariant =
   | "default"
   | "primary"
@@ -12,22 +11,11 @@ export type BadgeVariant =
   | "info"
   | "outline";
 
-/** Size of the badge, controlling padding and font size. */
 export type BadgeSize = "sm" | "md" | "lg";
 
-/** Props for the {@link Badge} component. */
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  /**
-   * Visual style of the badge.
-   * @default "default"
-   */
   variant?: BadgeVariant;
-  /**
-   * Size of the badge.
-   * @default "md"
-   */
   size?: BadgeSize;
-  /** Additional class names merged with the component's default styles. */
   className?: string;
 }
 
@@ -53,19 +41,7 @@ const sizeStyles: Record<BadgeSize, string> = {
   lg: "h-7 px-3 text-sm",
 };
 
-/**
- * A small inline status or label indicator.
- *
- * Renders a native `<span>` element, so all standard span attributes
- * (`aria-*`, `id`, `onClick`, etc.) work out of the box.
- *
- * @example
- * ```tsx
- * <Badge variant="success" size="sm">
- *   Active
- * </Badge>
- * ```
- */
+/** Small inline status or label indicator, rendered as a `<span>`. */
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   { variant = "default", size = "md", className, children, ...props },
   ref,

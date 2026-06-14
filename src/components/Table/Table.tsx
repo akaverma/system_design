@@ -10,25 +10,7 @@ export type TableHeadProps = React.ThHTMLAttributes<HTMLTableCellElement>;
 export type TableCellProps = React.TdHTMLAttributes<HTMLTableCellElement>;
 export type TableCaptionProps = React.HTMLAttributes<HTMLTableCaptionElement>;
 
-/**
- * A styled `<table>` element wrapped in a horizontally scrollable container.
- *
- * @example
- * ```tsx
- * <Table>
- *   <TableHeader>
- *     <TableRow>
- *       <TableHead>Name</TableHead>
- *     </TableRow>
- *   </TableHeader>
- *   <TableBody>
- *     <TableRow>
- *       <TableCell>Alice</TableCell>
- *     </TableRow>
- *   </TableBody>
- * </Table>
- * ```
- */
+/** Styled `<table>` wrapped in a horizontally scrollable container. */
 export const Table = React.forwardRef<HTMLTableElement, TableProps>(function Table(
   { className, ...props },
   ref,

@@ -9,46 +9,26 @@ import {
   InfoIcon,
 } from "../../icons";
 
-/** Visual style / status of the toast. */
 export type ToastVariant = "default" | "success" | "warning" | "danger" | "info";
 
 export interface ToastProps {
-  /**
-   * Visual style / status of the toast.
-   * @default "default"
-   */
   variant?: ToastVariant;
-  /** Title text. */
   title?: React.ReactNode;
-  /** Supporting description text. */
   description?: React.ReactNode;
-  /** Called when the toast is dismissed (close button click or auto-dismiss). */
   onDismiss?: () => void;
-  /** Additional class names. */
   className?: string;
 }
 
 export interface ToastOptions {
-  /**
-   * Visual style / status of the toast.
-   * @default "default"
-   */
   variant?: ToastVariant;
-  /** Title text. */
   title?: React.ReactNode;
-  /** Supporting description text. */
   description?: React.ReactNode;
-  /**
-   * Duration in ms before auto-dismiss. Set to `0` to disable auto-dismiss.
-   * @default 5000
-   */
+  /** Duration in ms before auto-dismiss. Set to `0` to disable auto-dismiss. */
   duration?: number;
 }
 
 export interface ToastContextValue {
-  /** Adds a toast to the queue and returns its id. */
   toast: (options: ToastOptions) => string;
-  /** Removes a toast by id. */
   dismiss: (id: string) => void;
 }
 
@@ -68,15 +48,7 @@ const variantIcons: Record<ToastVariant, React.ReactNode> = {
   info: <InfoIcon className="text-info" />,
 };
 
-/**
- * A single toast notification with an optional status icon, title,
- * description, and dismiss button.
- *
- * @example
- * ```tsx
- * <Toast variant="success" title="Saved" description="Your changes were saved." />
- * ```
- */
+/** A single toast notification with an optional status icon, title, description, and dismiss button. */
 export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(function Toast(
   { variant = "default", title, description, onDismiss, className },
   ref,
@@ -118,26 +90,12 @@ const ToastContext = React.createContext<ToastContextValue | null>(null);
 const DEFAULT_DURATION = 5000;
 
 let toastIdCounter = 0;
-/** Generates a stable, unique id for each toast. */
-function generateToastId(): string {
-  toastIdCounter += 1;
-  return `toast-${toastIdCounter}`;
-}
 
 interface ToastRecord extends ToastOptions {
   id: string;
 }
 
-/**
- * Provides a toast queue and renders the toast viewport in a portal.
- *
- * @example
- * ```tsx
- * <ToastProvider>
- *   <App />
- * </ToastProvider>
- * ```
- */
+/** Provides a toast queue and renders the toast viewport in a portal. */
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = React.useState<ToastRecord[]>([]);
   const timeoutsRef = React.useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
@@ -153,7 +111,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
   const toast = React.useCallback(
     (options: ToastOptions) => {
-      const id = generateToastId();
+      const id = `toast-${++toastIdCounter}`;
       setToasts((current) => [...current, { ...options, id }]);
 
       const duration = options.duration ?? DEFAULT_DURATION;
@@ -195,10 +153,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-/**
- * Returns the toast context value (`toast` and `dismiss` functions).
- * Must be used within a {@link ToastProvider}.
- */
+/** Must be used within a {@link ToastProvider}. */
 export function useToast(): ToastContextValue {
   const context = React.useContext(ToastContext);
   if (!context) {

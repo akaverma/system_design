@@ -1,28 +1,18 @@
 import * as React from "react";
 import { cn } from "../../utils/cn";
 
-/** Controls the `resize` CSS behavior of the textarea. */
 export type TextareaResize = "none" | "vertical" | "horizontal" | "both";
 
 export interface TextareaProps
   extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "size"> {
-  /** Visible label rendered above the textarea and associated via `htmlFor`/`id`. */
+  /** Rendered above the textarea and associated via htmlFor/id. */
   label?: string;
-  /**
-   * Error message. When provided, the textarea is styled as invalid and the
-   * message is announced via `aria-describedby` with `role="alert"`.
-   */
+  /** When set, the textarea is styled as invalid and the message is announced via aria-describedby with role="alert". */
   error?: string;
-  /** Helper text rendered below the textarea when there is no error. */
+  /** Rendered below the textarea when there is no error. */
   helperText?: string;
-  /**
-   * Controls the `resize` CSS behavior of the textarea.
-   * @default "vertical"
-   */
   resize?: TextareaResize;
-  /** Additional class names applied to the outer wrapper. */
   containerClassName?: string;
-  /** Additional class names merged with the textarea element's default styles. */
   className?: string;
 }
 
@@ -33,30 +23,6 @@ const resizeStyles: Record<TextareaResize, string> = {
   both: "resize",
 };
 
-let idCounter = 0;
-/** Generates a stable, unique id for associating labels/messages with a textarea across renders. */
-function useUniqueId(prefix: string, providedId?: string): string {
-  const generated = React.useRef<string>();
-  if (!generated.current) {
-    idCounter += 1;
-    generated.current = `${prefix}-${idCounter}`;
-  }
-  return providedId ?? generated.current;
-}
-
-/**
- * A labeled multi-line text input with support for error/helper text and resize control.
- *
- * @example
- * ```tsx
- * <Textarea
- *   label="Bio"
- *   placeholder="Tell us about yourself"
- *   error={errors.bio}
- *   rows={4}
- * />
- * ```
- */
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
   {
     label,
@@ -72,7 +38,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
   },
   ref,
 ) {
-  const textareaId = useUniqueId("textarea", id);
+  const generatedId = React.useId();
+  const textareaId = id ?? generatedId;
   const errorId = `${textareaId}-error`;
   const helperId = `${textareaId}-helper`;
 

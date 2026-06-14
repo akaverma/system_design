@@ -2,40 +2,25 @@ import * as React from "react";
 import { cn } from "../../utils/cn";
 import { ChevronDownIcon } from "../../icons";
 
-/** Whether one item or multiple items can be open at once. */
 export type AccordionType = "single" | "multiple";
 
 export interface AccordionProps {
-  /**
-   * Whether one item or multiple items can be open at once.
-   * @default "single"
-   */
   type?: AccordionType;
-  /** Currently open item value(s) (controlled). String for "single", string[] for "multiple". */
+  /** Open item value(s) (controlled). String for "single", string[] for "multiple". */
   value?: string | string[];
   /** Initially open item value(s) (uncontrolled). */
   defaultValue?: string | string[];
-  /** Called when the open item(s) change. */
   onValueChange?: (value: string | string[]) => void;
-  /**
-   * Whether the open item can be collapsed back to none, in "single" mode.
-   * @default true
-   */
+  /** In "single" mode, whether the open item can be collapsed back to none. */
   collapsible?: boolean;
-  /** `AccordionItem` elements. */
   children: React.ReactNode;
-  /** Additional class names merged with the component's default styles. */
   className?: string;
 }
 
 export interface AccordionItemProps {
-  /** Unique value identifying this item. */
   value: string;
-  /** Disables the trigger for this item. */
   disabled?: boolean;
-  /** An `AccordionTrigger` and `AccordionContent`. */
   children: React.ReactNode;
-  /** Additional class names merged with the component's default styles. */
   className?: string;
 }
 
@@ -74,26 +59,12 @@ function useAccordionItemContext(componentName: string): AccordionItemContextVal
   return context;
 }
 
-/** Normalizes a `string | string[] | undefined` value into a `string[]`. */
 function toArray(value: string | string[] | undefined): string[] {
   if (value === undefined) return [];
   return Array.isArray(value) ? value : [value];
 }
 
-/**
- * A vertically stacked set of interactive headings that each reveal an
- * associated section of content, following the WAI-ARIA accordion pattern.
- *
- * @example
- * ```tsx
- * <Accordion type="single" defaultValue="item-1" collapsible>
- *   <AccordionItem value="item-1">
- *     <AccordionTrigger>Is it accessible?</AccordionTrigger>
- *     <AccordionContent>Yes. It adheres to the WAI-ARIA accordion pattern.</AccordionContent>
- *   </AccordionItem>
- * </Accordion>
- * ```
- */
+/** A vertically stacked set of collapsible sections, following the WAI-ARIA accordion pattern. */
 export function Accordion({
   type = "single",
   value,
@@ -117,12 +88,10 @@ export function Accordion({
         next = current.includes(itemValue)
           ? current.filter((v) => v !== itemValue)
           : [...current, itemValue];
+      } else if (current.includes(itemValue) && collapsible) {
+        next = [];
       } else {
-        if (current.includes(itemValue) && collapsible !== false) {
-          next = [];
-        } else {
-          next = [itemValue];
-        }
+        next = [itemValue];
       }
 
       if (!isControlled) {
@@ -149,10 +118,7 @@ export function Accordion({
 }
 Accordion.displayName = "Accordion";
 
-/**
- * A single collapsible section within an `Accordion`. Provides context to its
- * `AccordionTrigger` and `AccordionContent` children.
- */
+/** A single collapsible section within an `Accordion`. */
 export function AccordionItem({ value, disabled, children, className }: AccordionItemProps) {
   const { openValues } = useAccordionContext("AccordionItem");
   const isOpen = openValues.includes(value);
@@ -170,10 +136,7 @@ export function AccordionItem({ value, disabled, children, className }: Accordio
 }
 AccordionItem.displayName = "AccordionItem";
 
-/**
- * The button that toggles its parent `AccordionItem`'s open state. Renders a
- * `<button aria-expanded>` with a chevron indicator that rotates when open.
- */
+/** Toggles its parent `AccordionItem`'s open state. Renders a chevron that rotates when open. */
 export const AccordionTrigger = React.forwardRef<HTMLButtonElement, AccordionTriggerProps>(
   function AccordionTrigger({ className, children, ...props }, ref) {
     const { value, disabled, isOpen } = useAccordionItemContext("AccordionTrigger");
@@ -201,10 +164,7 @@ export const AccordionTrigger = React.forwardRef<HTMLButtonElement, AccordionTri
   },
 );
 
-/**
- * The collapsible content panel of an `AccordionItem`. Renders as
- * `role="region"` and is only mounted while its item is open.
- */
+/** The collapsible content panel of an `AccordionItem`, mounted only while open. */
 export const AccordionContent = React.forwardRef<HTMLDivElement, AccordionContentProps>(
   function AccordionContent({ className, children, ...props }, ref) {
     const { value, isOpen } = useAccordionItemContext("AccordionContent");

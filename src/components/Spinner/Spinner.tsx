@@ -2,21 +2,12 @@ import * as React from "react";
 import { cn } from "../../utils/cn";
 import { SpinnerIcon } from "../../icons";
 
-/** Size of the spinner. */
 export type SpinnerSize = "sm" | "md" | "lg" | "xl";
 
 export interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * Size of the spinner.
-   * @default "md"
-   */
   size?: SpinnerSize;
-  /**
-   * Accessible label announced to screen readers while the spinner is visible.
-   * @default "Loading"
-   */
+  /** Announced to screen readers while the spinner is visible. */
   label?: string;
-  /** Additional class names merged with the component's default styles. */
   className?: string;
 }
 
@@ -27,18 +18,7 @@ const sizeStyles: Record<SpinnerSize, string> = {
   xl: "h-12 w-12",
 };
 
-/**
- * A small, animated spinner used to indicate a loading state.
- *
- * Renders with `role="status"` and a visually-hidden label so assistive
- * technologies announce the loading state, while the icon itself stays
- * `aria-hidden`.
- *
- * @example
- * ```tsx
- * <Spinner size="lg" label="Loading results" />
- * ```
- */
+/** Animated loading indicator with a visually-hidden label for screen readers. */
 export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(function Spinner(
   { size = "md", label = "Loading", className, ...props },
   ref,

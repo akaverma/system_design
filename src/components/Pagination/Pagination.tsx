@@ -2,44 +2,20 @@ import * as React from "react";
 import { cn } from "../../utils/cn";
 
 export interface PaginationProps extends React.HTMLAttributes<HTMLElement> {
-  /** Current 1-indexed page number. */
+  /** 1-indexed page number. */
   currentPage: number;
-  /** Total number of pages. */
   totalPages: number;
-  /** Called with the new page number when the user navigates. */
   onPageChange: (page: number) => void;
-  /**
-   * Number of page buttons shown adjacent to the current page on each side
-   * before collapsing into an ellipsis.
-   * @default 1
-   */
+  /** Pages shown on each side of the current page before collapsing into an ellipsis. */
   siblingCount?: number;
-  /**
-   * Hides the "Previous"/"Next" buttons.
-   * @default false
-   */
   hideControls?: boolean;
-  /** Additional class names merged with the component's default styles. */
   className?: string;
 }
 
 const itemStyles =
   "inline-flex h-9 min-w-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors";
 
-/**
- * Computes the list of page numbers (and ellipsis placeholders) to render
- * for a pagination control.
- *
- * Always includes the first and last page, plus `siblingCount` pages on
- * either side of `currentPage`. Gaps larger than one page are collapsed into
- * a single `"ellipsis"` entry. If `totalPages` is small enough that all pages
- * fit without collapsing, every page is returned with no ellipses.
- *
- * @example
- * ```ts
- * getPageRange(5, 10, 1); // [1, "ellipsis", 4, 5, 6, "ellipsis", 10]
- * ```
- */
+/** Returns the page numbers and ellipsis placeholders to render around `currentPage`. */
 export function getPageRange(
   currentPage: number,
   totalPages: number,
@@ -73,18 +49,7 @@ export function getPageRange(
   return pages;
 }
 
-/**
- * A navigation control for moving between pages of paginated content.
- *
- * Renders a `<nav>` containing page-number buttons with optional
- * "Previous"/"Next" controls. Page numbers collapse into ellipses for large
- * page counts based on `siblingCount`.
- *
- * @example
- * ```tsx
- * <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />
- * ```
- */
+/** Page navigation with Previous/Next controls and collapsible page numbers. */
 export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(function Pagination(
   { currentPage, totalPages, onPageChange, siblingCount = 1, hideControls = false, className, ...props },
   ref,

@@ -4,46 +4,16 @@ import { CheckIcon } from "../../icons";
 
 export interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "size"> {
-  /** Visible label rendered next to the checkbox and associated via `htmlFor`/`id`. */
   label?: string;
-  /**
-   * Error message. When provided, the checkbox is styled as invalid and the
-   * message is announced via `aria-describedby` with `role="alert"`.
-   */
+  /** When set, the checkbox is styled as invalid and the message is announced via `aria-describedby` with `role="alert"`. */
   error?: string;
-  /** Helper text rendered below the checkbox when there is no error. */
   helperText?: string;
-  /** Sets the checkbox to an indeterminate visual state (does not affect `checked`). @default false */
+  /** Visual-only indeterminate state; does not affect `checked`. */
   indeterminate?: boolean;
-  /** Additional class names applied to the outer wrapper. */
   containerClassName?: string;
-  /** Additional class names merged with the checkbox element's default styles. */
   className?: string;
 }
 
-let idCounter = 0;
-/** Generates a stable, unique id for associating labels/messages with a checkbox across renders. */
-function useUniqueId(prefix: string, providedId?: string): string {
-  const generated = React.useRef<string>();
-  if (!generated.current) {
-    idCounter += 1;
-    generated.current = `${prefix}-${idCounter}`;
-  }
-  return providedId ?? generated.current;
-}
-
-/**
- * A styled checkbox input with a visible label, error/helper text, and
- * indeterminate state support.
- *
- * @example
- * ```tsx
- * <Checkbox
- *   label="Accept terms and conditions"
- *   error={errors.terms}
- * />
- * ```
- */
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
   {
     label,
@@ -59,7 +29,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   },
   ref,
 ) {
-  const checkboxId = useUniqueId("checkbox", id);
+  const generatedId = React.useId();
+  const checkboxId = id ?? generatedId;
   const errorId = `${checkboxId}-error`;
   const helperId = `${checkboxId}-helper`;
 

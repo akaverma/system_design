@@ -1,28 +1,16 @@
 import * as React from "react";
 import { cn } from "../../utils/cn";
 
-/** Size of the toggle. */
 export type ToggleSize = "sm" | "md" | "lg";
 
 export interface ToggleProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "role" | "type" | "value"> {
-  /** Whether the toggle is on. */
+  /** Controlled checked state. Omit for uncontrolled usage with `defaultChecked`. */
   checked?: boolean;
-  /**
-   * Whether the toggle is on by default (uncontrolled mode).
-   * @default false
-   */
   defaultChecked?: boolean;
-  /** Called when the toggle is switched, with the new checked state. */
   onCheckedChange?: (checked: boolean) => void;
-  /**
-   * Size of the toggle.
-   * @default "md"
-   */
   size?: ToggleSize;
-  /** Accessible label for the toggle (use when there's no visible text label). */
   "aria-label"?: string;
-  /** Additional class names merged with the component's default styles. */
   className?: string;
 }
 
@@ -53,21 +41,7 @@ const thumbCheckedTranslateStyles: Record<ToggleSize, string> = {
   lg: "translate-x-5",
 };
 
-/**
- * A switch/toggle control for binary on/off states.
- *
- * Renders a native `<button type="button" role="switch">` rather than a
- * checkbox input, allowing a fully custom styled thumb while remaining
- * accessible to assistive technology.
- *
- * Supports both controlled (`checked` + `onCheckedChange`) and uncontrolled
- * (`defaultChecked`) usage.
- *
- * @example
- * ```tsx
- * <Toggle aria-label="Enable notifications" defaultChecked />
- * ```
- */
+/** Renders a `<button role="switch">` with a sliding thumb. */
 export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
   {
     checked,

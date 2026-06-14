@@ -13,40 +13,17 @@ export type DrawerSize = "sm" | "md" | "lg" | "full";
 export interface DrawerProps {
   /** Whether the drawer is open. When `false`, nothing is rendered. */
   isOpen: boolean;
-  /** Called when the drawer requests to be closed (ESC key, overlay click, or close button). */
+  /** Called on ESC, overlay click, or close button. */
   onClose: () => void;
-  /**
-   * Edge of the screen the drawer slides in from.
-   * @default "right"
-   */
   position?: DrawerPosition;
-  /** Title rendered in the drawer header and used for `aria-labelledby`. */
+  /** Rendered in the header and used for `aria-labelledby`. */
   title?: React.ReactNode;
-  /** Drawer body content. */
   children?: React.ReactNode;
-  /** Optional footer content (e.g. action buttons). */
   footer?: React.ReactNode;
-  /**
-   * Size of the drawer along its sliding axis.
-   * @default "md"
-   */
   size?: DrawerSize;
-  /**
-   * Whether clicking the overlay closes the drawer.
-   * @default true
-   */
   closeOnOverlayClick?: boolean;
-  /**
-   * Whether pressing Escape closes the drawer.
-   * @default true
-   */
   closeOnEsc?: boolean;
-  /**
-   * Whether to show the built-in close (X) button in the header.
-   * @default true
-   */
   showCloseButton?: boolean;
-  /** Additional class names for the drawer panel. */
   className?: string;
 }
 
@@ -71,30 +48,10 @@ const heightBySize: Record<DrawerSize, string> = {
   full: "h-full",
 };
 
-let idCounter = 0;
-/** Generates a stable, unique id for associating the title with the drawer panel across renders. */
-function useUniqueId(prefix: string): string {
-  const generated = React.useRef<string>();
-  if (!generated.current) {
-    idCounter += 1;
-    generated.current = `${prefix}-${idCounter}`;
-  }
-  return generated.current;
-}
-
 /**
- * A panel that slides in from an edge of the screen, used for off-canvas
- * navigation or forms.
- *
- * Renders into `document.body` via a portal, traps focus while open, and can
- * be dismissed via the Escape key, an overlay click, or a close button.
- *
- * @example
- * ```tsx
- * <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} title="Filters" position="right">
- *   <FilterForm />
- * </Drawer>
- * ```
+ * A panel that slides in from an edge of the screen, used for off-canvas navigation or forms.
+ * Renders into `document.body` via a portal, traps focus while open, and can be dismissed via
+ * the Escape key, an overlay click, or a close button.
  */
 export function Drawer({
   isOpen,
@@ -110,7 +67,7 @@ export function Drawer({
   className,
 }: DrawerProps) {
   const focusTrapRef = useFocusTrap<HTMLDivElement>(isOpen);
-  const titleId = useUniqueId("drawer-title");
+  const titleId = React.useId();
 
   React.useEffect(() => {
     if (!isOpen) return;

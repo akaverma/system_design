@@ -8,26 +8,15 @@ import {
   CloseIcon,
 } from "../../icons";
 
-/** Visual style / severity of the alert. */
 export type AlertVariant = "default" | "success" | "warning" | "danger" | "info";
 
 export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
-  /**
-   * Visual style / severity of the alert.
-   * @default "default"
-   */
   variant?: AlertVariant;
-  /** Alert title. */
   title?: React.ReactNode;
-  /**
-   * Whether to show the variant's status icon on the left. Has no effect for
-   * the `"default"` variant, which has no associated icon.
-   * @default true
-   */
+  /** Has no effect for the `"default"` variant, which has no associated icon. */
   showIcon?: boolean;
-  /** Called when the dismiss (close) button is clicked. If omitted, no dismiss button is shown. */
+  /** If omitted, no dismiss button is shown. */
   onDismiss?: () => void;
-  /** Additional class names merged with the component's default styles. */
   className?: string;
 }
 
@@ -52,19 +41,8 @@ const variantIcons: Record<AlertVariant, React.ReactNode> = {
 };
 
 /**
- * An inline banner used to surface form-level messages, page notices, and
- * other status information, with optional title, icon, and dismiss button.
- *
- * Renders a `<div>` with `role="alert"` for the `"danger"` variant (so
- * assistive technology announces it immediately) and `role="status"` for
- * all other variants.
- *
- * @example
- * ```tsx
- * <Alert variant="success" title="Saved" onDismiss={() => setVisible(false)}>
- *   Your changes have been saved.
- * </Alert>
- * ```
+ * Inline banner for form-level messages, page notices, and other status info.
+ * Renders with `role="alert"` for the `"danger"` variant and `role="status"` otherwise.
  */
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   { variant = "default", title, showIcon = true, onDismiss, className, children, ...props },

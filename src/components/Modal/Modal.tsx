@@ -4,43 +4,23 @@ import { cn } from "../../utils/cn";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 import { CloseIcon } from "../../icons";
 
-/** Size of the modal, controlling the dialog panel's max width. */
 export type ModalSize = "sm" | "md" | "lg" | "xl" | "full";
 
 export interface ModalProps {
   /** Whether the modal is open. When `false`, nothing is rendered. */
   isOpen: boolean;
-  /** Called when the modal requests to be closed (ESC key, overlay click, or close button). */
+  /** Called on ESC, overlay click, or close button. */
   onClose: () => void;
-  /** Title rendered in the modal header and used for `aria-labelledby`. */
+  /** Rendered in the header and used for `aria-labelledby`. */
   title?: React.ReactNode;
-  /** Optional description rendered below the title, used for `aria-describedby`. */
+  /** Rendered below the title and used for `aria-describedby`. */
   description?: React.ReactNode;
-  /** Modal body content. */
   children?: React.ReactNode;
-  /** Optional footer content (e.g. action buttons), rendered at the bottom. */
   footer?: React.ReactNode;
-  /**
-   * Size of the modal.
-   * @default "md"
-   */
   size?: ModalSize;
-  /**
-   * Whether clicking the overlay closes the modal.
-   * @default true
-   */
   closeOnOverlayClick?: boolean;
-  /**
-   * Whether pressing Escape closes the modal.
-   * @default true
-   */
   closeOnEsc?: boolean;
-  /**
-   * Whether to show the built-in close (X) button in the header.
-   * @default true
-   */
   showCloseButton?: boolean;
-  /** Additional class names for the dialog panel. */
   className?: string;
 }
 
@@ -52,30 +32,7 @@ const sizeStyles: Record<ModalSize, string> = {
   full: "max-w-[calc(100vw-2rem)] h-[calc(100vh-2rem)]",
 };
 
-let idCounter = 0;
-/** Generates a stable, unique id for associating the title/description with the dialog across renders. */
-function useUniqueId(prefix: string): string {
-  const generated = React.useRef<string>();
-  if (!generated.current) {
-    idCounter += 1;
-    generated.current = `${prefix}-${idCounter}`;
-  }
-  return generated.current;
-}
-
-/**
- * A modal dialog rendered in a portal, with focus trapping, ESC-to-close, and
- * overlay-click-to-close behavior.
- *
- * Renders `null` when `isOpen` is `false` (the modal is not kept mounted while closed).
- *
- * @example
- * ```tsx
- * <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Confirm">
- *   Are you sure?
- * </Modal>
- * ```
- */
+/** Modal dialog rendered in a portal with focus trapping, ESC-to-close, and overlay-click-to-close. */
 export function Modal({
   isOpen,
   onClose,
@@ -90,8 +47,8 @@ export function Modal({
   className,
 }: ModalProps) {
   const focusTrapRef = useFocusTrap<HTMLDivElement>(isOpen);
-  const titleId = useUniqueId("modal-title");
-  const descId = useUniqueId("modal-description");
+  const titleId = React.useId();
+  const descId = React.useId();
 
   React.useEffect(() => {
     if (!isOpen || !closeOnEsc) return;

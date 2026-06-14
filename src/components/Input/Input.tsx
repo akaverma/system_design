@@ -5,49 +5,18 @@ export interface InputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "size" | "prefix" | "suffix"
 > {
-  /** Visible label rendered above the input and associated via `htmlFor`/`id`. */
+  /** Rendered above the input and associated via htmlFor/id. */
   label?: string;
-  /**
-   * Error message. When provided, the input is styled as invalid and the
-   * message is announced via `aria-describedby` with `role="alert"`.
-   */
+  /** When set, the input is styled as invalid and the message is announced via aria-describedby with role="alert". */
   error?: string;
-  /** Helper text rendered below the input when there is no error. */
+  /** Rendered below the input when there is no error. */
   helperText?: string;
-  /** Icon or element rendered inside the input on the left side. */
   prefix?: React.ReactNode;
-  /** Icon or element rendered inside the input on the right side. */
   suffix?: React.ReactNode;
-  /** Additional class names applied to the outer wrapper. */
   containerClassName?: string;
-  /** Additional class names merged with the input element's default styles. */
   className?: string;
 }
 
-let idCounter = 0;
-/** Generates a stable, unique id for associating labels/messages with an input across renders. */
-function useUniqueId(prefix: string, providedId?: string): string {
-  const generated = React.useRef<string>();
-  if (!generated.current) {
-    idCounter += 1;
-    generated.current = `${prefix}-${idCounter}`;
-  }
-  return providedId ?? generated.current;
-}
-
-/**
- * A labeled text input with support for error/helper text and prefix/suffix adornments.
- *
- * @example
- * ```tsx
- * <Input
- *   label="Email"
- *   placeholder="you@example.com"
- *   error={errors.email}
- *   prefix={<MailIcon />}
- * />
- * ```
- */
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
   {
     label,
@@ -64,7 +33,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   },
   ref,
 ) {
-  const inputId = useUniqueId("input", id);
+  const generatedId = React.useId();
+  const inputId = id ?? generatedId;
   const errorId = `${inputId}-error`;
   const helperId = `${inputId}-helper`;
 

@@ -1,33 +1,17 @@
 import * as React from "react";
 import { cn } from "../../utils/cn";
 
-/** Visual style of the button. */
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "link";
 
-/** Size of the button, controlling padding and font size. */
 export type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /**
-   * Visual style of the button.
-   * @default "primary"
-   */
   variant?: ButtonVariant;
-  /**
-   * Size of the button.
-   * @default "md"
-   */
   size?: ButtonSize;
-  /**
-   * Shows a loading spinner and disables the button while `true`.
-   * @default false
-   */
+  /** Shows a spinner and disables the button while true. */
   isLoading?: boolean;
-  /** Icon rendered before the button label. */
   iconLeft?: React.ReactNode;
-  /** Icon rendered after the button label. */
   iconRight?: React.ReactNode;
-  /** Additional class names merged with the component's default styles. */
   className?: string;
 }
 
@@ -51,7 +35,6 @@ const sizeStyles: Record<ButtonSize, string> = {
   lg: "h-12 px-6 text-base",
 };
 
-/** Animated spinner used for the `isLoading` state. */
 function Spinner({ className }: { className?: string }) {
   return (
     <svg
@@ -70,19 +53,6 @@ function Spinner({ className }: { className?: string }) {
   );
 }
 
-/**
- * A clickable button supporting multiple visual variants, sizes, and a loading state.
- *
- * Renders a native `<button>` element, so all standard button attributes
- * (`onClick`, `type`, `aria-*`, etc.) and keyboard interactions work out of the box.
- *
- * @example
- * ```tsx
- * <Button variant="primary" size="md" onClick={handleSave}>
- *   Save
- * </Button>
- * ```
- */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     variant = "primary",

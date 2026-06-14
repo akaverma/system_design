@@ -1,33 +1,18 @@
 import * as React from "react";
 import { cn } from "../../utils/cn";
 
-/** Size of the avatar. */
 export type AvatarSize = "sm" | "md" | "lg" | "xl";
 
-/** Shape of the avatar. */
 export type AvatarShape = "circle" | "square";
 
-/**
- * Props for the {@link Avatar} component.
- */
 export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Image URL for the avatar. */
   src?: string;
-  /** Alt text for the image, also used to derive initials if `name` is not provided. */
+  /** Also used to derive initials if `name` is not provided. */
   alt?: string;
-  /** Display name used to derive fallback initials (first letters of up to first two words). */
+  /** Used to derive fallback initials (first letters of up to the first two words). */
   name?: string;
-  /**
-   * Size of the avatar.
-   * @default "md"
-   */
   size?: AvatarSize;
-  /**
-   * Shape of the avatar.
-   * @default "circle"
-   */
   shape?: AvatarShape;
-  /** Additional class names merged with the component's default styles. */
   className?: string;
 }
 
@@ -47,7 +32,7 @@ const sizeStyles: Record<AvatarSize, string> = {
   xl: "h-16 w-16 text-lg",
 };
 
-/** Derives up to two uppercase initials from a display name. */
+/** Up to two uppercase initials from a display name. */
 function getInitials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
   if (words.length === 0) return "";
@@ -57,7 +42,6 @@ function getInitials(name: string): string {
   return (first.charAt(0) + last.charAt(0)).toUpperCase();
 }
 
-/** Generic person silhouette used when no image or name is available. */
 function PlaceholderIcon() {
   return (
     <svg
@@ -72,28 +56,17 @@ function PlaceholderIcon() {
 }
 
 /**
- * Displays a user or entity avatar, falling back from an image to initials
- * derived from a `name`, and finally to a generic placeholder icon.
- *
- * @example
- * ```tsx
- * <Avatar src="/avatars/jane.png" name="Jane Doe" />
- * <Avatar name="Jane Doe" />
- * <Avatar />
- * ```
+ * Falls back from an image to initials derived from `name`, and finally to a
+ * generic placeholder icon.
  */
 export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(function Avatar(
   { src, alt, name, size = "md", shape = "circle", className, ...props },
   ref,
 ) {
   const [imageErrored, setImageErrored] = React.useState(false);
-
-  const showImage = !!src && !imageErrored;
-  const initials = name ? getInitials(name) : "";
-
   const rootClassName = cn(baseStyles, shapeStyles[shape], sizeStyles[size], className);
 
-  if (showImage) {
+  if (src && !imageErrored) {
     return (
       <div ref={ref} className={rootClassName} {...props}>
         <img
@@ -106,11 +79,11 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(function Ava
     );
   }
 
-  const ariaLabel = alt ?? name;
+  const initials = name ? getInitials(name) : "";
 
   return (
-    <div ref={ref} role="img" aria-label={ariaLabel} className={rootClassName} {...props}>
-      {initials ? initials : <PlaceholderIcon />}
+    <div ref={ref} role="img" aria-label={alt ?? name} className={rootClassName} {...props}>
+      {initials || <PlaceholderIcon />}
     </div>
   );
 });
