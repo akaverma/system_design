@@ -16,9 +16,7 @@ fails, no credential helper configured).
 - GitHub Actions: single workflow `deploy-storybook.yml` — `build` job runs
   lint/typecheck/test/build/storybook-build on PRs and pushes to `main`; `deploy` job (push to
   `main` only) deploys Storybook to GitHub Pages, base path `/system_design/` via
-  `STORYBOOK_BASE_PATH` env var read in `.storybook/main.ts`. `ci.yml` and `publish.yml` were
-  removed (publish.yml needed an `NPM_TOKEN` secret that was never set up and never ran since it
-  only triggered on GitHub releases).
+  `STORYBOOK_BASE_PATH` env var read in `.storybook/main.ts`.
 - Storybook is live at `https://akaverma.github.io/system_design/` (Pages source = GitHub Actions)
 
 ## What exists so far
