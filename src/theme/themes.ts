@@ -32,7 +32,7 @@ export const lightTheme: Theme = {
     "muted-foreground": "215 16% 47%",
     accent: "210 40% 96%",
     "accent-foreground": "222 47% 11%",
-    destructive: "0 84% 60%",
+    destructive: "0 84% 48%",
     "destructive-foreground": "210 40% 98%",
     success: "142 71% 45%",
     "success-foreground": "210 40% 98%",
